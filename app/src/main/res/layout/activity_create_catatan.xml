@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    tools:context=".CreateCatatan">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buat Catatan"
+        android:textSize="30dp"
+        android:id="@+id/judul"
+        android:layout_marginBottom="40dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Isi judul catatan"
+        android:id="@+id/inputJudul"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/judul"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Isi catatan"
+        android:id="@+id/inputIsi"
+        android:layout_below="@+id/inputJudul"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Simpan Catatan"
+        android:id="@+id/tombolSimpan"
+        android:layout_below="@+id/inputIsi"
+        />
+
+</RelativeLayout>
