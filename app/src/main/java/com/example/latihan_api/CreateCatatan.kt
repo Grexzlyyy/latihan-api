@@ -2,6 +2,7 @@ package com.example.latihan_api
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log // Pastikan ada import ini
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -19,11 +20,14 @@ class CreateCatatan : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // PERBAIKAN 1: Binding harus dipasang ke setContentView
         binding = ActivityCreateCatatanBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        // --- GANTI JADI INI ---
+        setContentView(binding.root)
+        // ----------------------
+
+        // Perhatikan: Gunakan binding.root juga di sini agar lebih aman (opsional tapi disarankan)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -33,6 +37,11 @@ class CreateCatatan : AppCompatActivity() {
 
     fun setupEvents() {
         binding.tombolSimpan.setOnClickListener {
+            // --- TARUH KODE TES DI SINI (BARIS PERTAMA DALAM KURUNG KURAWAL) ---
+            Toast.makeText(this, "TOMBOL DITEKAN!", Toast.LENGTH_SHORT).show()
+            Log.d("CobaTes", "Tombol Simpan Ditekan!")
+            // -------------------------------------------------------------------
+
             val judul = binding.inputJudul.text.toString()
             val isi = binding.inputIsi.text.toString()
 
@@ -42,38 +51,37 @@ class CreateCatatan : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Siapkan data untuk dikirim
+            // ... (kode payload dan coroutine Anda lanjut di bawah sini) ...
+
             val payload = Catatan(
-                id = null, // ID null karena ini data baru
+                id = null,
                 judul = judul,
                 isi = isi,
-                // PERBAIKAN 2: Wajib menyertakan userId (sesuai API Laravel)
                 userId = 1
             )
 
-            // Kirim ke API menggunakan Coroutine
             lifecycleScope.launch {
-                // Tambahkan try-catch agar aplikasi tidak force close jika internet mati
                 try {
                     val response = RetrofitClient.catatanRepository.createCatatan(payload)
                     if (response.isSuccessful) {
                         displayMessage("Catatan Berhasil dibuat")
-
                         val intent = Intent(this@CreateCatatan, MainActivity::class.java)
                         startActivity(intent)
-
                         finish()
                     } else {
+                        // Tambahkan Log error juga di sini untuk cek detail errornya
+                        Log.e("CobaTes", "Gagal: ${response.message()}")
                         displayMessage("Gagal menyimpan: ${response.message()}")
                     }
                 } catch (e: Exception) {
+                    // Tambahkan Log error koneksi
+                    Log.e("CobaTes", "Error Koneksi: ${e.message}")
                     displayMessage("Error koneksi: ${e.message}")
                 }
             }
         }
     }
 
-    // Fungsi bantuan untuk menampilkan Toast (jika belum ada)
     private fun displayMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
