@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.latihan_api.adapter.CatatanAdapter
 import com.example.latihan_api.databinding.ActivityMainBinding
+import com.example.latihan_api.entities.Catatan
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -35,16 +36,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setupEvents() {
-        adapter = CatatanAdapter(mutableListOf())
+        adapter = CatatanAdapter(mutableListOf(), object : CatatanAdapter.CatatanItemevents{
+            override fun onEdit(catatan: Catatan) {
+                val intent = Intent(this@MainActivity, EditCatatanActivity::class.java)
+                intent.putExtra("id_catatan", catatan.id)
+
+                startActivity(intent)
+            }
+        })
+
+
         // Pastikan di activity_main.xml ada RecyclerView dengan ID 'container'
         binding.container.adapter = adapter
         binding.container.layoutManager = LinearLayoutManager(this)
 
-        // Kode navigasi ini dikomentari di gambar asli Anda
-//        binding.btnNavigate.setOnClickListener {
-//            val intent = Intent(this, CreateCatatan::class.java)
-//            startActivity(intent)
-//        }
+         //Kode navigasi ini dikomentari di gambar asli Anda
+        binding.btnNavigate.setOnClickListener {
+            val intent = Intent(this, CreateCatatan::class.java)
+            startActivity(intent)
+        }
 
     }
 

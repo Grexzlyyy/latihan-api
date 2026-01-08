@@ -8,8 +8,13 @@ import com.example.latihan_api.databinding.ItemCatatanBinding
 import com.example.latihan_api.entities.Catatan
 
 class CatatanAdapter(
-    private val dataset: MutableList<Catatan>
+    private val dataset: MutableList<Catatan>,
+    private val events: CatatanItemevents
 ) : RecyclerView.Adapter<CatatanAdapter.CatatanViewHolder>() {
+
+    interface CatatanItemevents {
+        fun onEdit(catatan: Catatan)
+    }
 
     inner class CatatanViewHolder(
         val view: ItemCatatanBinding
@@ -18,6 +23,10 @@ class CatatanAdapter(
         fun setDataKeUI(data: Catatan) {
             view.judul.text = data.judul
             view.isi.text = data.isi
+
+            view.root.setOnClickListener{
+                events.onEdit(data)
+            }
         }
     }
 
