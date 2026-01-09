@@ -14,18 +14,26 @@ class CatatanAdapter(
 
     interface CatatanItemevents {
         fun onEdit(catatan: Catatan)
+        fun onDelete(catatan: Catatan)
     }
 
     inner class CatatanViewHolder(
         val view: ItemCatatanBinding
     ) : RecyclerView.ViewHolder(view.root) {
-        // Fungsi untuk mengikat data ke tampilan (TextView)
+
         fun setDataKeUI(data: Catatan) {
             view.judul.text = data.judul
             view.isi.text = data.isi
 
-            view.root.setOnClickListener{
+            // Klik biasa untuk Edit
+            view.root.setOnClickListener {
                 events.onEdit(data)
+            }
+
+            // --- TAMBAHAN: Tekan lama untuk Delete ---
+            view.root.setOnLongClickListener {
+                events.onDelete(data)
+                true // Mengembalikan true agar click biasa tidak ikut terpanggil
             }
         }
     }
@@ -36,13 +44,10 @@ class CatatanAdapter(
             parent,
             false
         )
-
         return CatatanViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return dataset.size
-    }
+    override fun getItemCount(): Int = dataset.size
 
     override fun onBindViewHolder(holder: CatatanViewHolder, position: Int) {
         val dataSekarang = dataset[position]

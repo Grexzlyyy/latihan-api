@@ -3,6 +3,7 @@ package com.example.latihan_api.repository
 import com.example.latihan_api.entities.Catatan
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -16,8 +17,11 @@ interface CatatanRepository {
     suspend fun getCatatan(): Response<List<Catatan>>
 
     @GET("catatan/{id}")
-    suspend fun getCatatan(@Path("id") id:Int): Response<Catatan>
+    suspend fun getCatatan(@Path("id") id: Int): Response<Catatan>
 
     @PUT("catatan/{id}")
-    suspend fun editCatatan(@Path("id") id:Int, @Body catatan: Catatan): Response<Catatan>
+    suspend fun editCatatan(@Path("id") id: Int, @Body catatan: Catatan): Response<Catatan>
+
+    @DELETE("catatan/{id}")
+    suspend fun deleteCatatan(@Path("id") id: Int): Response<Void>
 }

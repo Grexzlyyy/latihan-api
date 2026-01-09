@@ -1,50 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditCatatanActivity">
+    android:background="#F8F9FA">
 
-
-    <TextView
-        android:layout_marginTop="20dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Catatan"
-        android:textSize="30dp"
-        android:id="@+id/judul"
-        android:layout_marginBottom="40dp"
-        />
-
-    <EditText
-        android:layout_marginHorizontal="20dp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Isi judul catatan"
-        android:id="@+id/inputJudul"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@+id/judul"
-        />
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <EditText
-        android:layout_marginHorizontal="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Isi catatan"
-        android:id="@+id/inputIsi"
-        android:layout_below="@+id/inputJudul"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Catatan"
+            android:textColor="#202124"
+            android:textSize="28sp"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginBottom="32dp"/>
 
-    <Button
-        android:layout_marginHorizontal="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Simpan Catatan"
-        android:id="@+id/tombolEdit"
-        android:layout_below="@+id/inputIsi"
-        />
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Judul"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            android:layout_marginBottom="20dp">
 
-</RelativeLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputJudul"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Isi Catatan"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            android:layout_marginBottom="32dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputIsi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:minLines="5" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tombolEdit"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="Perbarui Catatan"
+            app:cornerRadius="12dp"
+            android:backgroundTint="#018786"/> </LinearLayout>
+</ScrollView>

@@ -36,26 +36,64 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setupEvents() {
-        adapter = CatatanAdapter(mutableListOf(), object : CatatanAdapter.CatatanItemevents{
+        // Update adapter dengan menambahkan onDelete
+        adapter = CatatanAdapter(mutableListOf(), object : CatatanAdapter.CatatanItemevents {
             override fun onEdit(catatan: Catatan) {
                 val intent = Intent(this@MainActivity, EditCatatanActivity::class.java)
                 intent.putExtra("id_catatan", catatan.id)
-
                 startActivity(intent)
+            }
+
+            // Fitur Delete: Munculkan Dialog saat ditekan lama
+            override fun onDelete(catatan: Catatan) {
+                showDeleteDialog(catatan)
             }
         })
 
-
-        // Pastikan di activity_main.xml ada RecyclerView dengan ID 'container'
         binding.container.adapter = adapter
         binding.container.layoutManager = LinearLayoutManager(this)
 
-         //Kode navigasi ini dikomentari di gambar asli Anda
         binding.btnNavigate.setOnClickListener {
             val intent = Intent(this, CreateCatatan::class.java)
             startActivity(intent)
         }
+    }
 
+    // Fungsi untuk menampilkan Popup Konfirmasi
+    private fun showDeleteDialog(catatan: Catatan) {
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle("Hapus Catatan")
+        builder.setMessage("Apakah Anda yakin ingin menghapus catatan '${catatan.judul}'?")
+
+        builder.setPositiveButton("Ya, Hapus") { _, _ ->
+            prosesHapusData(catatan.id!!)
+        }
+
+        builder.setNegativeButton("Batal") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    // Fungsi untuk memanggil API Delete
+    private fun prosesHapusData(id: Int) {
+        lifecycleScope.launch {
+            try {
+                // Pastikan di Repository kamu sudah ada fungsi deleteCatatan(id)
+                val response = RetrofitClient.catatanRepository.deleteCatatan(id)
+
+                if (response.isSuccessful) {
+                    displayMessage("Catatan berhasil dihapus")
+                    loadData() // Refresh list setelah dihapus
+                } else {
+                    displayMessage("Gagal menghapus: ${response.message()}")
+                }
+            } catch (e: Exception) {
+                displayMessage("Error: ${e.message}")
+            }
+        }
     }
 
     override fun onStart() {
@@ -64,41 +102,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loadData() {
-        // JEJAK 1: Mulai proses
-        Log.d("CekData", "Fungsi loadData() dipanggil! Sedang menghubungi server...")
-
+        Log.d("CekData", "Fungsi loadData() dipanggil!")
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.catatanRepository.getCatatan()
-
-                // JEJAK 2: Server merespon
-                Log.d("CekData", "Respon diterima. Code: ${response.code()}")
-
-                if (!response.isSuccessful) {
-                    Log.e("CekData", "Gagal Server: ${response.message()}")
+                if (response.isSuccessful) {
+                    val data = response.body()
+                    if (data != null) {
+                        adapter.updateDataset(data)
+                    }
+                } else {
                     displayMessage("Gagal : ${response.message()}")
-                    return@launch
                 }
-
-                val data = response.body()
-
-                // JEJAK 3: Cek isi data
-                Log.d("CekData", "Isi Data: $data")
-
-                if (data == null) {
-                    Log.e("CekData", "Data Kosong (Null)")
-                    displayMessage("Tidak ada data")
-                    return@launch
-                }
-
-                // JEJAK 4: Masukkan ke Adapter
-                Log.d("CekData", "Menampilkan ${data.size} catatan ke layar")
-                adapter.updateDataset(data)
-
             } catch (e: Exception) {
-                // JEJAK 5: Error Koneksi (Paling sering terjadi)
-                Log.e("CekData", "ERROR KONEKSI FATAL: ${e.message}")
-                e.printStackTrace()
+                Log.e("CekData", "ERROR: ${e.message}")
                 displayMessage("Error Koneksi: ${e.message}")
             }
         }
